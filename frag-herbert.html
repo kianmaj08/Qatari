@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Frag Herbert!</title>
+  <style>
+    :root {
+      --bg: #faf8f3;
+      --text: #1b1b1b;
+      --beige: #f2eadf;
+      --white: #ffffff;
+      --border: #e6e6e6;
+      --accent: #1f1f1f;
+      --radius: 12px;
+      --shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    header { position: sticky; top:0; background: #fff; border-bottom:1px solid var(--border); padding:16px; text-align:center; font-weight:600; z-index:10; }
+    main { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+    a.back { display:inline-block; margin: 8px 0 16px; text-decoration: none; }
+    .chat { display:flex; flex-direction:column; gap:12px; background:#fff; padding:16px; border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); min-height:60vh; }
+    .msg { max-width: 75%; padding:10px 12px; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.04); border:1px solid var(--border); white-space:pre-wrap; }
+    .msg.user { align-self:flex-end; background: var(--white); }
+    .msg.bot { align-self:flex-start; background: var(--beige); }
+    .composer { position: sticky; bottom:0; margin-top:16px; display:flex; gap:8px; background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:8px; box-shadow:var(--shadow); }
+    .composer input { flex:1; border:none; outline:none; font-size:16px; padding:10px 12px; background:transparent; }
+    .composer button { border:1px solid var(--border); background: var(--accent); color:#fff; padding:10px 14px; border-radius:10px; cursor:pointer; }
+    .hint { font-size:14px; color:#666; margin-top:8px; }
+  </style>
+</head>
+<body>
+  <header>Frag Herbert!</header>
+  <main>
+    <a class="back" href="./">← Zur Startseite</a>
+
+    <div id="chat" class="chat" aria-live="polite" aria-label="Chatverlauf"></div>
+
+    <div class="composer" role="form" aria-label="Nachricht senden">
+      <input id="message" type="text" placeholder="Frag mich etwas …" autocomplete="off" />
+      <button id="send">Senden</button>
+    </div>
+    <p class="hint">Hinweis: Dieser Chat fragt ein Sprachmodell von OpenAI (gpt-5-mini) über eine Netlify Function an.</p>
+  </main>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const input = document.getElementById("message");
+    const sendBtn = document.getElementById("send");
+
+    function addMsg(text, who) {
+      const el = document.createElement("div");
+      el.className = "msg " + who;
+      el.textContent = text;
+      chat.appendChild(el);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    async function send() {
+      const text = input.value.trim();
+      if (!text) return;
+      addMsg(text, "user");
+      input.value = "";
+      try {
+        const res = await fetch("/.netlify/functions/herbert", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await res.json();
+        if (data.reply) addMsg(data.reply, "bot");
+        else addMsg("Fehler: Keine Antwort erhalten.", "bot");
+      } catch (e) {
+        addMsg("Fehler beim Senden. Prüfe Internet oder Server.", "bot");
+      }
+    }
+
+    sendBtn.addEventListener("click", send);
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter") send(); });
+  </script>
+</body>
+</html>

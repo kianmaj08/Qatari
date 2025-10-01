@@ -1,0 +1,117 @@
+/* Beige-forward Theme + Sora font */
+:root{
+  --bg:#F2F2F2;
+  --bg-alt:#EAE4D5;
+  --edge:#B6B09F;
+  --text:#000;
+  --radius:20px;
+  --glass-bg:rgba(255,255,255,0.55);
+  --glass-brd:rgba(0,0,0,0.08);
+  --shadow:0 18px 50px rgba(0,0,0,.12);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Sora,system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif;
+  color:var(--text);
+  background:linear-gradient(180deg, var(--bg), var(--bg-alt) 140%);
+  line-height:1.7;
+  overflow-x:hidden;
+}
+
+/* Scroll progress bar */
+#scrollbar{
+  position:fixed;top:0;left:0;height:4px;background:#000;width:0%;z-index:1000;
+  box-shadow:0 0 12px rgba(0,0,0,.3);
+}
+
+/* Header */
+.site-header{
+  position:sticky;top:12px;z-index:50;margin:0 12px;
+}
+.glass{
+  background:var(--glass-bg);
+  backdrop-filter:saturate(125%) blur(10px);
+  -webkit-backdrop-filter:saturate(125%) blur(10px);
+  border:1px solid var(--glass-brd);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+
+.container{max-width:1100px;margin:0 auto;padding:0 20px}
+.nav-wrap{display:flex;align-items:center;justify-content:space-between;height:64px;padding:0 12px}
+.brand{font-weight:800;text-decoration:none;color:var(--text);letter-spacing:.3px}
+nav a{margin-left:14px;text-decoration:none;color:var(--text);font-weight:600;opacity:.85;padding:6px 10px;border-radius:10px;position:relative}
+nav a::after{content:'';position:absolute;left:10px;right:10px;bottom:4px;height:2px;background:#000;transform:scaleX(0);transform-origin:left;transition:transform .25s ease}
+nav a:hover::after, nav a.active::after{transform:scaleX(1)}
+
+/* Sections */
+.section{padding:72px 0}
+.section.alt{background:var(--bg-alt)}
+.section-title{margin:0 0 8px;font-size:clamp(24px,3vw,36px)}
+
+.grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+.hero h1{font-size:clamp(30px,4vw,48px);line-height:1.12;margin:0 0 14px}
+.lead{font-size:1.05rem;opacity:.9}
+.cta-row{margin-top:22px;display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;padding:12px 18px;border-radius:999px;border:2px solid var(--text);text-decoration:none;font-weight:700;transition:transform .2s ease, background .2s ease}
+.btn.primary{background:var(--text);color:#fff}
+.btn.ghost{background:transparent;color:var(--text)}
+
+.image-frame{overflow:hidden;border:1px solid var(--edge)}
+.image-frame img{display:block;width:100%;height:auto;transform:scale(1.02);transition:transform .6s ease}
+.image-frame:hover img{transform:scale(1.06)}
+
+/* Cards */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:10px}
+.card{padding:18px;text-decoration:none;color:var(--text);transition:transform .25s ease, box-shadow .25s ease, background .25s ease}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.16)}
+
+/* Content */
+.content h2{margin-top:0}
+.content ul{padding-left:18px}
+
+.columns{columns:2;gap:24px}
+.checklist li{list-style:"✓  ";padding-left:6px;margin:6px 0}
+
+/* Layout tweaks */
+.grid-2.tight{gap:20px}
+.pros-cons{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.note{margin-top:10px;opacity:.85}
+
+/* Footer */
+.site-footer{padding:36px 0;border-top:1px solid rgba(0,0,0,.06);margin-top:24px}
+
+/* Reveal */
+.reveal{opacity:0;transform:translateY(16px);}
+.reveal.visible{opacity:1;transform:none;transition:opacity .7s ease, transform .7s ease}
+.delay-50{transition-delay:.05s}
+.delay-100{transition-delay:.1s}
+.delay-150{transition-delay:.15s}
+.delay-200{transition-delay:.2s}
+.delay-250{transition-delay:.25s}
+.delay-300{transition-delay:.3s}
+.delay-350{transition-delay:.35s}
+
+/* Kinetic title (no blur) */
+.kinetic-title{will-change:transform,opacity}
+.kinetic-seg{display:inline-block;opacity:0;transform:translateY(-26px) rotate(-1.2deg);}
+
+/* Parallax & Tilt */
+.parallax{transform-style:preserve-3d;perspective:800px}
+.tilt{transform-style:preserve-3d;transition:transform .2s ease}
+.tilt:hover{transform:translateY(-4px) rotateX(2deg) rotateY(-2deg)}
+
+/* Stagger paragraphs/lists */
+.stagger, .stagger-list li{opacity:0;transform:translateY(10px)}
+.stagger.visible, .stagger-list.visible li{opacity:1;transform:none;transition:opacity .6s ease, transform .6s ease}
+.stagger-list li{transition-delay:calc(var(--i, 0) * 70ms)}
+
+/* Responsive */
+@media (max-width:860px){
+  .grid-2{grid-template-columns:1fr}
+  nav a{margin-left:10px}
+  .columns{columns:1}
+}
